@@ -1,0 +1,23 @@
+{
+  "name": "vendor_name/spa-php-mysql",
+  "description": "My first SPA project",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "areza",
+      "email": "email@example.com"
+    }
+  ],
+  "require": {
+    "php": "^8.3",
+    "ext-iconv": "*",
+    "ext-pdo": "*",
+    "monolog/monolog": "^3.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src"
+    }
+  }
+}
