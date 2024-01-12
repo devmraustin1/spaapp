@@ -9,6 +9,6 @@ CREATE TABLE operations
 (
     id        INT(10) PRIMARY KEY AUTO_INCREMENT,
     is_income BOOL,
-    amount    INT,
+    amount    INT(15),
     comment   TEXT
 );
