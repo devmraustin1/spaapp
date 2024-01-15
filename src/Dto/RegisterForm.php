@@ -2,7 +2,6 @@
 
 namespace App\Dto;
 
-
 use Exception;
 
 readonly class RegisterForm
@@ -20,9 +19,11 @@ readonly class RegisterForm
     public static function fromUserRequest(): self
     {
         $requestAsArray = json_decode(file_get_contents('php://input'), true);
+
         if (empty($requestAsArray['login'])) {
             throw new \Exception('Login is empty!');
         }
+
         if (empty($requestAsArray['password'])) {
             throw new \Exception('Password is empty!');
         }

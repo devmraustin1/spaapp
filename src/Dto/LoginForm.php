@@ -20,11 +20,13 @@ readonly class  LoginForm
     public static function fromUserRequest(): self
     {
         $requestAsArray = json_decode(file_get_contents('php://input'), true);
+
         if (empty($requestAsArray['login'])) {
-            throw new Exception('Login is empty!');
+            throw new \Exception('Login is empty!');
         }
+
         if (empty($requestAsArray['password'])) {
-            throw new Exception('Password is empty!');
+            throw new \Exception('Password is empty!');
         }
 
         return new self($requestAsArray['login'], $requestAsArray['password']);
