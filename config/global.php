@@ -7,7 +7,6 @@ define('MYSQL_ROOT_PASSWORD', $_SERVER['MYSQL_ROOT_PASSWORD']);
 define('MYSQL_DATABASE', $_SERVER['MYSQL_DATABASE']);
 define('MYSQL_USER', $_SERVER['MYSQL_USER']);
 define('MYSQL_PASSWORD', $_SERVER['MYSQL_PASSWORD']);
-define('PASSPHRASE', $_SERVER['PASSPHRASE']);
 define('PROJECT_DIR', dirname(__DIR__, 1));
 
 // Установка часового пояса как в примере (где бы не выполнялся скрипт - одинаковое время)
