@@ -3,6 +3,7 @@
 namespace App;
 
 use Exception;
+use Monolog\Logger;
 use PDO;
 use PDOException;
 
