@@ -19,6 +19,9 @@ class UserController
     {
     }
 
+    /**
+     * @throws Exception
+     */
     public function register(): never
     {
         try {
@@ -29,9 +32,6 @@ class UserController
         }
 
         $_SESSION['user_id'] = $this->db->createNewUser($registerFrom->login, $registerFrom->password);
-        header("Location: /");
-
-//            echo new ErrorJsonResponse("fail");
 
         echo new SuccessJsonResponse("Registered", []);
 
@@ -52,7 +52,7 @@ class UserController
             $_SESSION['user_id'] = $userArray['id'];
         } catch (Exception $e) {
         }
-        echo new SuccessJsonResponse("Registered", []);
+        echo new SuccessJsonResponse("Login OK", []);
         header("Location: /");
         exit;
     }
