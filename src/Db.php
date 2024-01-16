@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace App;
 
 use Exception;
@@ -42,18 +42,19 @@ class Db
         return $userArray['id'] ?? 0;
     }
 
+    /**
+     * @throws Exception
+     */
     public function createNewUser(string $login, string $password): int
     {
         if ($this->getUserIdByLogin($login)) {
-            throw new  Exception("User already exists");
+            throw new Exception("User already exists");
         }
-        try {
-            $sql = "INSERT INTO users (login, password_hashed) VALUES (?, ?)";
-            $pdoStatement = $this->pdo->prepare($sql);
-            return $pdoStatement->execute([$login, password_hash($password, CRYPT_STD_DES)]);
-        } catch (PDOException $exception) {
-            return false;
-        }
+
+        $sql = "INSERT INTO users (login, password_hashed) VALUES (?, ?)";
+        $pdoStatement = $this->pdo->prepare($sql);
+        $pdoStatement->execute([$login, password_hash($password, CRYPT_STD_DES)]);
+        return $this->getUserIdByLogin($login);
     }
 }
 
