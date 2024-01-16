@@ -54,7 +54,7 @@ class UserController
         }
         echo new SuccessJsonResponse("Login OK", []);
         header("Location: /");
-        exit;
+        exit ();
     }
 }
 
