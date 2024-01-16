@@ -2,6 +2,7 @@
 declare(strict_types=1);
 require_once dirname(__DIR__, 1) . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . "global.php";
 
+use App\Controller\OperationController;
 use App\Controller\UserController;
 use App\Db;
 use App\ErrorJsonResponse;
@@ -30,6 +31,8 @@ try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($firstElement == 'register') {
             (new UserController($logger, $db))->register();
+        } elseif ($firstElement == 'operation' and isset($_SESSION['user_id'])) {
+            (new OperationController($logger, $db))->getLastTenTransactions();
         } elseif ($firstElement == 'login') {
             (new UserController($logger, $db))->login();
         }
