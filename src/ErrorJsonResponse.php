@@ -5,7 +5,7 @@ namespace App;
 readonly class ErrorJsonResponse
 {
     public function __construct(
-        private int $message
+        private string $message
     )
     {
     }
