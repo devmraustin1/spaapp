@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace App;
 
 use Exception;
@@ -55,6 +56,11 @@ class Db
         $pdoStatement = $this->pdo->prepare($sql);
         $pdoStatement->execute([$login, password_hash($password, CRYPT_STD_DES)]);
         return $this->getUserIdByLogin($login);
+    }
+
+    public function getLastTenTransactions(): array
+    {
+        return $this->pdo->query("SELECT * FROM operations ORDER by id DESC LIMIT 10")->fetchAll(PDO::FETCH_ASSOC);
     }
 }
 
