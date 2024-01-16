@@ -150,30 +150,13 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Handle</th>
+                    <th scope="col">Id</th>
+                    <th scope="col">Income</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Comment</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td colspan="2">Larry the Bird</td>
-                    <td>@twitter</td>
-                </tr>
+                <tbody id="table-tbody">
                 </tbody>
             </table>
         </div>
@@ -181,6 +164,27 @@
 </section>
 <!--TABLE-VIEW-END    -->
 <script>
+    function tableGeneration(transaction) {
+        let row = `<tr><th scope="row">${transaction.id}</th><td>${transaction.is_income}</td><td>${transaction.amount}</td><td>${transaction.comment}</td></tr>`;
+        document.getElementById("table-tbody").innerHTML += row;
+    }
+    /**
+     * @param {Response} response
+     */
+    async function respondCodeLogic(response) {
+        const result = await response.json();
+
+        if (result.success === true) {
+            document.getElementById("login-view").style.display = "none";
+            document.getElementById("register-view").style.display = "none";
+            document.getElementById("table-view").style.removeProperty('display');
+
+            result.data.forEach((transaction) => {
+                tableGeneration(transaction)
+            });
+        }
+    }
+
     function notRegistered() {
 
         document.getElementById("register-view").style.removeProperty('display');
@@ -188,7 +192,7 @@
 
     document.getElementById("notRegister-button").onclick = notRegistered;
 
-    async function postJSON() {
+    async function registerJSON() {
 
         let password = document.getElementById("register-password").value;
         let login = document.getElementById("register-login").value;
@@ -204,20 +208,35 @@
                 body: json,
             });
 
-            const result = await response.json();
+            await respondCodeLogic(response);
 
-            console.log("Success:", result);
-
-            if (result.success === true) {
-                document.getElementById("login-view").style.display = "none";
-                document.getElementById("table-view").style.removeProperty('display');
-            }
         } catch (error) {
             alert(error);
         }
     }
 
-    document.getElementById("register-button").onclick = postJSON;
+    async function loginJSON() {
+        let password = document.getElementById("register-password").value;
+        let login = document.getElementById("register-login").value;
+        let myObj = {login: login, password: password};
+        let json = JSON.stringify(myObj);
+        try {
+            const response = await fetch("/operation", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: json,
+            });
+
+            await respondCodeLogic(response);
+        } catch (error) {
+            alert(error);
+        }
+    }
+
+    document.getElementById("register-button").onclick = registerJSON;
+    document.getElementById("login-button").onclick = loginJSON;
 
 </script>
 </body>
