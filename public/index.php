@@ -26,21 +26,19 @@ try {
 
 $db = new Db($pdo, $logger);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if ($firstElement == 'register') {
-        if (!isset($_SESSION['user_id'])) {
-            try {
-                (new UserController($logger, $db))->register();
-            } catch (Exception $e) {
-            }
+try {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($firstElement == 'register') {
+            (new UserController($logger, $db))->register();
+        } elseif ($firstElement == 'login') {
+            (new UserController($logger, $db))->login();
         }
-    } elseif ($firstElement == 'login') {
-        (new UserController($logger, $db))->login();
     }
+
+} catch (Exception $e) {
+    echo new ErrorJsonResponse($e->getMessage());
+    exit();
 }
 
-echo new ErrorJsonResponse(404);
+echo new ErrorJsonResponse("got invalid request URI:  $actualLink");
 exit();
-
-
-
