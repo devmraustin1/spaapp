@@ -83,13 +83,10 @@
                                         </div>
                                     </form>
                                     <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                                        <button class="btn btn-primary btn-lg" id="login-button">Login</button>
-                                    </div>
-                                    <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                                        <button class="btn btn-primary btn-lg" id="login-button">Login</button>&nbsp;
                                         <button class="btn btn-primary btn-lg" id="notRegister-button">Not register
                                         </button>
                                     </div>
-
                                 </div>
                             </div>
                             <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
@@ -103,6 +100,7 @@
             </div>
         </div>
     </div>
+    <!--LOGIN-VIEW-END-->
     <div class="container h-100" style="display: none" id="operation-view">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-lg-12 col-xl-11">
@@ -151,7 +149,7 @@
                 <thead>
                 <tr>
                     <th scope="col">Id</th>
-                    <th scope="col">Income</th>
+                    <th scope="col">Type</th>
                     <th scope="col">Amount</th>
                     <th scope="col">Comment</th>
                 </tr>
@@ -159,15 +157,64 @@
                 <tbody id="table-tbody">
                 </tbody>
             </table>
+            <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                <button class="btn btn-primary btn-lg" id="create-operation-button">Create new operation</button>
+            </div>
         </div>
     </div>
+    <!--  INPUT-OPERATION-INPUT-FORM-VIEW-->
+    <div class="container h-100" style="display: none" id="input-operation-view">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-lg-12 col-xl-11">
+                <div class="card text-black" style="border-radius: 25px;">
+                    <div class="card-body p-md-5">
+                        <div class="row justify-content-center">
+                            <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+                                <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">New operation</p>
+                                <div class="mx-1 mx-md-4 text-center">
+                                    <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off"
+                                           checked>
+                                    <label class="btn btn-secondary" for="option1">Income</label>
+                                    <input type="radio" class="btn-check" name="options" id="option4"
+                                           autocomplete="off">
+                                    <label class="btn btn-secondary" for="option4">Expense</label><br>
+                                    <br>
+                                    <form>
+                                        <div class="d-flex flex-row align-items-center mb-4">
+                                            <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+                                            <div class="form-outline flex-fill mb-0">
+                                                <input type="number" id="new-operation-amount" class="form-control"/>
+                                                <label class="form-label" for="new-operation-amount">Amount</label>
+                                            </div>
+                                            <div class="form-outline flex-fill mb-0">
+                                                <input type="text" id="new-operation-comment" class="form-control"/>
+                                                <label class="form-label" for="new-operation-comment">Comment</label>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                                        <button class="btn btn-primary btn-lg" id="new-operation-button">Create</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+                                <img src="/assets/img/draw1.webp"
+                                     class="img-fluid" alt="Sample image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  INPUT-OPERATION-INPUT-FORM-VIEW-END-->
 </section>
-<!--TABLE-VIEW-END    -->
 <script>
     function tableGeneration(transaction) {
         let row = `<tr><th scope="row">${transaction.id}</th><td>${transaction.is_income}</td><td>${transaction.amount}</td><td>${transaction.comment}</td></tr>`;
         document.getElementById("table-tbody").innerHTML += row;
     }
+
     /**
      * @param {Response} response
      */
@@ -184,6 +231,15 @@
             });
         }
     }
+
+    function showInputFormOperation() {
+        document.getElementById("login-view").style.display = "none";
+        document.getElementById("register-view").style.display = "none";
+        document.getElementById("table-view").style.display = "none";
+        document.getElementById("input-operation-view").style.removeProperty('display');
+    }
+
+    document.getElementById("create-operation-button").onclick = showInputFormOperation;
 
     function notRegistered() {
 
