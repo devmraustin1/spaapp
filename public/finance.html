@@ -214,6 +214,56 @@
         </div>
     </div>
     <!--  INPUT-OPERATION-INPUT-FORM-VIEW-END-->
+    <!-- Open-Operation-FORM-VIEW   -->
+    <div class="container h-100" style="display: none" id="open-operation-form">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-lg-12 col-xl-11">
+                <div class="card text-black" style="border-radius: 25px;">
+                    <div class="card-body p-md-5">
+                        <div class="row justify-content-center">
+                            <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+                                <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Operation ID:
+                                    <script></script>
+                                </p>
+                                <div class="mx-1 mx-md-4 text-center">
+                                    <input type="radio" class="btn-check" name="options" id="eeee"
+                                           autocomplete="off"
+                                           checked>
+                                    <label class="btn btn-secondary" for="input-amount button">Income</label>
+                                    <input type="radio" class="btn-check" name="options" id="eeeee"
+                                           autocomplete="off">
+                                    <label class="btn btn-secondary" for="input-comment button">Expense</label><br>
+                                    <br>
+                                    <form>
+                                        <div class="d-flex flex-row align-items-center mb-4">
+                                            <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+                                            <div class="form-outline flex-fill mb-0">
+                                                <input type="number" min="0" oninput="validity.valid||(value='');"
+                                                       id="xxx1" class="form-control"/>
+                                                <label class="form-label" for="xxx1">Amount</label>
+                                            </div>
+                                            <div class="form-outline flex-fill mb-0">
+                                                <input type="text" id="xxx" class="form-control"/>
+                                                <label class="form-label" for="xxx">Comment</label>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                                        <button class="btn btn-primary btn-lg" id="open-operation-back-to-list">Back to
+                                            list
+                                        </button>&nbsp;
+                                        <button class="btn btn-primary btn-lg" id="open-operation-delete-operation">
+                                            Delete
+                                        </button>
+                                        <!--                                        TODO Make delete operation-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 </section>
 <script>
 
@@ -265,6 +315,16 @@
     }
 
     document.getElementById("create-operation-button").onclick = showInputFormOperation;
+
+    function openOperationBackToList() {
+
+        document.getElementById("login-view").style.display = "none";
+        document.getElementById("register-view").style.display = "none";
+        document.getElementById("table-view").style.removeProperty('display');
+        document.getElementById("input-operation-view").style.display = "none";
+    }
+
+    document.getElementById("open-operation-back-to-list").onclick = openOperationBackToList;
 
     function notRegistered() {
 
@@ -319,10 +379,20 @@
     document.getElementById("register-button").onclick = registerJSON;
     document.getElementById("login-button").onclick = loginJSON;
 
-    //target id set for open buttons
+    //get id for open buttons
     function operationOpenTargetDatasetId(target) {
-        console.log('targetData2', target.target.dataset.id);
+        let targetIdNumber = target.target.dataset.id;
+        console.log(targetIdNumber);
+
+        document.getElementById("login-view").style.display = "none";
+        document.getElementById("register-view").style.display = "none";
+        document.getElementById("table-view").style.display = "none";
+        document.getElementById("input-operation-view").style.display = "none";
+        document.getElementById("open-operation-form").style.removeProperty('display');
+
     }
+
+    document.getElementsByClassName("operation-open").onclick = operationOpenTargetDatasetId;
 
 
 </script>
