@@ -62,5 +62,10 @@ class Db
     {
         return $this->pdo->query("SELECT * FROM operations ORDER by id DESC LIMIT 10")->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getCurrentOpenTransactionById(int $id): array
+    {
+        return $this->pdo->query("SELECT * FROM operations WHERE id = $id")->fetch(PDO::FETCH_ASSOC);
+    }
 }
 

@@ -23,5 +23,10 @@ class OperationController
         exit();
     }
 
-
+    public function getCurrentOpenTransaction(int $id): never
+    {
+        $getOpenTransactionById = $this->db->getCurrentOpenTransactionById($id);
+        echo new SuccessJsonResponse("Get open transaction info by ID", $getOpenTransactionById);
+        exit();
+    }
 }
