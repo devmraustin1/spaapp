@@ -222,29 +222,30 @@
                     <div class="card-body p-md-5">
                         <div class="row justify-content-center">
                             <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
-                                <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Operation ID:
-                                    <script></script>
-                                </p>
+                                <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Operation id <font
+                                        color="#1e90ff">
+                                    <text id="currentOperationId"></text>
+                                </font></p>
                                 <div class="mx-1 mx-md-4 text-center">
                                     <input type="radio" class="btn-check" name="options" id="eeee"
                                            autocomplete="off"
                                            checked>
-                                    <label class="btn btn-secondary" for="input-amount button">Income</label>
-                                    <input type="radio" class="btn-check" name="options" id="eeeee"
-                                           autocomplete="off">
-                                    <label class="btn btn-secondary" for="input-comment button">Expense</label><br>
+                                    <label class="btn btn-secondary" for="input-amount button" id="buttonIncome"
+                                           style="display: none">Income</label>
+                                    <label class="btn btn-secondary" for="input-comment button" id="buttonExpense"
+                                           style="display: none">Expense</label><br>
                                     <br>
                                     <form>
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
                                             <div class="form-outline flex-fill mb-0">
                                                 <input type="number" min="0" oninput="validity.valid||(value='');"
-                                                       id="xxx1" class="form-control"/>
-                                                <label class="form-label" for="xxx1">Amount</label>
+                                                       id="amountOperation" class="form-control"/>
+                                                <label class="form-label" for="amountOperation">Amount</label>
                                             </div>
                                             <div class="form-outline flex-fill mb-0">
-                                                <input type="text" id="xxx" class="form-control"/>
-                                                <label class="form-label" for="xxx">Comment</label>
+                                                <input type="text" id="commentOperation" class="form-control"/>
+                                                <label class="form-label" for="commentOperation">Comment</label>
                                             </div>
                                         </div>
                                     </form>
@@ -255,7 +256,6 @@
                                         <button class="btn btn-primary btn-lg" id="open-operation-delete-operation">
                                             Delete
                                         </button>
-                                        <!--                                        TODO Make delete operation-->
                                     </div>
                                 </div>
                             </div>
@@ -264,6 +264,7 @@
                 </div>
             </div>
         </div>
+    </div>
 </section>
 <script>
 
@@ -311,7 +312,7 @@
         document.getElementById("login-view").style.display = "none";
         document.getElementById("register-view").style.display = "none";
         document.getElementById("table-view").style.display = "none";
-        document.getElementById("input-operation-view").style.removeProperty('display');
+        document.getElementById("input-operation-view").style.display = "block";
     }
 
     document.getElementById("create-operation-button").onclick = showInputFormOperation;
@@ -320,7 +321,7 @@
 
         document.getElementById("login-view").style.display = "none";
         document.getElementById("register-view").style.display = "none";
-        document.getElementById("table-view").style.removeProperty('display');
+        document.getElementById("table-view").style.display = "block";
         document.getElementById("input-operation-view").style.display = "none";
     }
 
@@ -379,10 +380,8 @@
     document.getElementById("register-button").onclick = registerJSON;
     document.getElementById("login-button").onclick = loginJSON;
 
-    //get id for open buttons
-    function operationOpenTargetDatasetId(target) {
+    async function operationOpenTargetDatasetId(target) {
         let targetIdNumber = target.target.dataset.id;
-        console.log(targetIdNumber);
 
         document.getElementById("login-view").style.display = "none";
         document.getElementById("register-view").style.display = "none";
@@ -390,10 +389,31 @@
         document.getElementById("input-operation-view").style.display = "none";
         document.getElementById("open-operation-form").style.removeProperty('display');
 
+        let targetNumber = JSON.stringify(targetIdNumber);
+        const response = await fetch(`/operation/${targetIdNumber}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: targetNumber,
+        });
+
+        const result = await response.json();
+        console.log(result);
+        if (result.success === true) {
+            if (result.data.is_income === 1) {
+                document.getElementById("buttonIncome").style.display = "block"
+                document.getElementById("buttonExpense").style.display = "none"
+
+            } else {
+                document.getElementById("buttonIncome").style.display = "none"
+                document.getElementById("buttonExpense").style.display = "block"
+            }
+            document.getElementById("commentOperation").value = `${result.data.comment}`
+            document.getElementById("amountOperation").value = `${result.data.amount}`
+            document.getElementById("currentOperationId").innerText = `${result.data.id}`
+        }
     }
-
-    document.getElementsByClassName("operation-open").onclick = operationOpenTargetDatasetId;
-
 
 </script>
 </body>

@@ -31,10 +31,12 @@ try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($firstElement == 'register') {
             (new UserController($logger, $db))->register();
-        } elseif ($firstElement == 'operation' and isset($_SESSION['user_id'])) {
-            (new OperationController($logger, $db))->getLastTenTransactions();
         } elseif ($firstElement == 'login') {
             (new UserController($logger, $db))->login();
+        } elseif ($firstElement == 'operation' && isset($_SESSION['user_id']) && empty($secondElement)) {
+            (new OperationController($logger, $db))->getLastTenTransactions();
+        } elseif ($firstElement == 'operation' && !empty($secondElement)) {
+            (new OperationController($logger, $db))->getCurrentOpenTransaction((int)$secondElement);
         }
     }
 
