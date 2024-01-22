@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Dto\OperationForm;
 use Exception;
 use Monolog\Logger;
 use PDO;
@@ -67,5 +68,18 @@ class Db
     {
         return $this->pdo->query("SELECT * FROM operations WHERE id = $id")->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function deleteCurrentOperation(int $id): bool
+    {
+        return $this->pdo->query("DELETE FROM operations WHERE id = $id")->execute();
+    }
+
+    public function createNewOperation(int $amount, string $comment, bool $isIncome): bool
+    {
+        $sql = "INSERT INTO operations (amount, comment, is_income) VALUES (?, ?, ?)";
+        $pdoStatement = $this->pdo->prepare($sql);
+        return $pdoStatement->execute([$amount, $comment, (int)$isIncome]);
+    }
+
 }
 

@@ -176,13 +176,13 @@
                             <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
                                 <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">New operation</p>
                                 <div class="mx-1 mx-md-4 text-center">
-                                    <input type="radio" class="btn-check" name="options" id="input-amount button"
+                                    <input type="radio" class="btn-check" name="options" id="input-income-button"
                                            autocomplete="off"
                                            checked>
-                                    <label class="btn btn-secondary" for="input-amount button">Income</label>
-                                    <input type="radio" class="btn-check" name="options" id="input-comment button"
+                                    <label class="btn btn-secondary" for="input-income-button">Income</label>
+                                    <input type="radio" class="btn-check" name="options" id="input-expense-button"
                                            autocomplete="off">
-                                    <label class="btn btn-secondary" for="input-comment button">Expense</label><br>
+                                    <label class="btn btn-secondary" for="input-expense-button">Expense</label><br>
                                     <br>
                                     <form>
                                         <div class="d-flex flex-row align-items-center mb-4">
@@ -230,9 +230,9 @@
                                     <input type="radio" class="btn-check" name="options" id="eeee"
                                            autocomplete="off"
                                            checked>
-                                    <label class="btn btn-secondary" for="input-amount button" id="buttonIncome"
+                                    <label class="btn btn-secondary" for="input-income-button" id="buttonIncome"
                                            style="display: none">Income</label>
-                                    <label class="btn btn-secondary" for="input-comment button" id="buttonExpense"
+                                    <label class="btn btn-secondary" for="input-expense-button" id="buttonExpense"
                                            style="display: none">Expense</label><br>
                                     <br>
                                     <form>
@@ -282,7 +282,8 @@
         if (result.success === true) {
             document.getElementById("login-view").style.display = "none";
             document.getElementById("register-view").style.display = "none";
-            document.getElementById("table-view").style.removeProperty('display');
+            // document.getElementById("table-view").style.removeProperty('display');
+            document.getElementById("table-view").style.display = "block";
 
             result.data.forEach((transaction) => {
                 tableGeneration(transaction)
@@ -329,7 +330,8 @@
 
     function notRegistered() {
 
-        document.getElementById("register-view").style.removeProperty('display');
+        //document.getElementById("register-view").style.removeProperty('display');
+        document.getElementById("register-view").style.display = "block";
     }
 
     document.getElementById("notRegister-button").onclick = notRegistered;
@@ -387,7 +389,8 @@
         document.getElementById("register-view").style.display = "none";
         document.getElementById("table-view").style.display = "none";
         document.getElementById("input-operation-view").style.display = "none";
-        document.getElementById("open-operation-form").style.removeProperty('display');
+        //  document.getElementById("open-operation-form").style.removeProperty('display');
+        document.getElementById("open-operation-form").style.display = "block";
 
         let targetNumber = JSON.stringify(targetIdNumber);
         const response = await fetch(`/operation/${targetIdNumber}`, {
@@ -414,6 +417,64 @@
             document.getElementById("currentOperationId").innerText = `${result.data.id}`
         }
     }
+
+    async function operationDeleteCurrent() {
+        let transactionID = document.getElementById("currentOperationId").textContent;
+        try {
+            await fetch(`/operation/${transactionID}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: transactionID,
+            });
+
+        } catch (error) {
+            alert(error);
+        }
+        document.getElementById("table-view").style.display = "none";
+        document.getElementById("open-operation-delete-operation").style.display = "none";
+        document.getElementById("table-view").style.display = "block";
+
+    }
+
+    document.getElementById("open-operation-delete-operation").onclick = operationDeleteCurrent;
+
+    async function createNewOperation() {
+        let amount = document.getElementById("new-operation-amount").value;
+        let comment = document.getElementById("new-operation-comment").value;
+
+        function isIncomeTrue() {
+            if (document.getElementById("input-income-button").checked) {
+                return 1;
+            } else {
+                return 0;
+            }
+
+        }
+
+        let is_income = isIncomeTrue();
+        console.log('is_income', is_income);
+
+        let newOperationData = {amount: amount, comment: comment, is_income: is_income};
+        let json = JSON.stringify(newOperationData);
+        try {
+            const response = await fetch("/createNewOperation", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: json,
+            });
+
+            await respondCodeLogic(response);
+        } catch (error) {
+            alert(error);
+        }
+    }
+
+    document.getElementById("new-operation-button").onclick = createNewOperation;
+
 
 </script>
 </body>

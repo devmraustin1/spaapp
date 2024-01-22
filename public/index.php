@@ -37,8 +37,14 @@ try {
             (new OperationController($logger, $db))->getLastTenTransactions();
         } elseif ($firstElement == 'operation' && !empty($secondElement)) {
             (new OperationController($logger, $db))->getCurrentOpenTransaction((int)$secondElement);
+        } elseif ($firstElement == 'createNewOperation' && empty($secondElement) && isset($_SESSION['user_id'])) {
+            (new OperationController($logger, $db))->createNewOperation();
         }
     }
+    if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+        if ($firstElement == 'operation' && !empty($secondElement) && isset($_SESSION['user_id'])) {
+        (new OperationController($logger, $db))->deleteCurrentOperation((int)$secondElement);
+    }}
 
 } catch (Exception $e) {
     echo new ErrorJsonResponse($e->getMessage());
