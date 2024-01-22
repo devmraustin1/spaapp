@@ -282,7 +282,7 @@
         if (result.success === true) {
             document.getElementById("login-view").style.display = "none";
             document.getElementById("register-view").style.display = "none";
-            // document.getElementById("table-view").style.removeProperty('display');
+            document.getElementById("input-operation-view").style.display = "none";
             document.getElementById("table-view").style.display = "block";
 
             result.data.forEach((transaction) => {
@@ -322,15 +322,15 @@
 
         document.getElementById("login-view").style.display = "none";
         document.getElementById("register-view").style.display = "none";
-        document.getElementById("table-view").style.display = "block";
         document.getElementById("input-operation-view").style.display = "none";
+        document.getElementById("open-operation-form").style.display = "none";
+        document.getElementById("table-view").style.display = "block";
     }
 
     document.getElementById("open-operation-back-to-list").onclick = openOperationBackToList;
 
     function notRegistered() {
 
-        //document.getElementById("register-view").style.removeProperty('display');
         document.getElementById("register-view").style.display = "block";
     }
 
@@ -433,7 +433,7 @@
             alert(error);
         }
         document.getElementById("table-view").style.display = "none";
-        document.getElementById("open-operation-delete-operation").style.display = "none";
+        document.getElementById("open-operation-form").style.display = "none";
         document.getElementById("table-view").style.display = "block";
 
     }
