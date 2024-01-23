@@ -13,7 +13,7 @@ readonly class ErrorJsonResponse
     public function __toString(): string
     {
         return json_encode([
-            'false' => false,
+            'success' => false,
             'message' => $this->message
         ]);
     }
