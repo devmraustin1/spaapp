@@ -8,11 +8,11 @@ use App\ErrorJsonResponse;
 use App\SuccessJsonResponse;
 use Monolog\Logger;
 
-class OperationController
+readonly class OperationController
 {
     public function __construct(
-        private readonly Logger $logger,
-        private readonly Db     $db
+        private Logger $logger,
+        private Db     $db
     )
     {
     }
@@ -55,6 +55,20 @@ class OperationController
 
         }
         exit ();
+    }
+
+    public function totalSum(): never
+    {
+        $totalSum = $this->db->getTotalIncome();
+        echo new SuccessJsonResponse("Total sum receive successfully", $totalSum);
+        exit();
+    }
+
+    public function totalSumExpense(): never
+    {
+        $totalSumExpense = $this->db->getTotalExpenses();
+        echo new SuccessJsonResponse("Total sum expenses received successfully", $totalSumExpense);
+        exit();
     }
 
 }
