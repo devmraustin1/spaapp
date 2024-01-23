@@ -50,10 +50,11 @@ class UserController
         try {
             $userArray = $this->db->getUserByLoginAndPassword($loginForm->login, $loginForm->password);
             $_SESSION['user_id'] = $userArray['id'];
-        } catch (Exception $e) {
+        } catch (Exception $ex) {
+            echo new ErrorJsonResponse($ex->getMessage());
+            exit();
         }
         echo new SuccessJsonResponse("Login OK", []);
-        header("Location: /");
         exit ();
     }
 }
