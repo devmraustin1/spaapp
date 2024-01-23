@@ -21,12 +21,16 @@ class Db
     /**
      * @throws Exception
      */
-    public function getUserByLoginAndPassword($login, $password): array|false
+    public function getUserByLoginAndPassword($login, $password): array
     {
         $sql = "SELECT * FROM users WHERE login = ?";
         $pdoStatement = $this->pdo->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $pdoStatement->execute([$login]);
         $userArray = $pdoStatement->fetch(PDO::FETCH_ASSOC);
+
+        if (empty($userArray)) {
+            throw new Exception("user with $login not found");
+        }
 
         if (password_verify($password, $userArray['password_hashed'])) {
             return $userArray;
@@ -81,5 +85,14 @@ class Db
         return $pdoStatement->execute([$amount, $comment, (int)$isIncome]);
     }
 
+    public function getTotalIncome()
+    {
+        return $this->pdo->query("SELECT SUM(AMOUNT) AS SUM FROM operations WHERE is_income = 1;")->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getTotalExpenses()
+    {
+        return $this->pdo->query("SELECT SUM(AMOUNT) AS TOTALSUMEXPENSE FROM operations WHERE is_income = 0;")->fetch(PDO::FETCH_ASSOC);
+    }
 }
 
