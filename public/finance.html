@@ -90,7 +90,6 @@
                                 </div>
                             </div>
                             <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
-
                                 <img src="/assets/img/draw1.webp"
                                      class="img-fluid" alt="Sample image">
                             </div>
@@ -132,7 +131,6 @@
                                 </div>
                             </div>
                             <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
-
                                 <img src="/assets/img/draw1.webp"
                                      class="img-fluid" alt="Sample image">
                             </div>
@@ -163,6 +161,12 @@
                 <button class="btn btn-primary btn-lg" id="create-operation-button" data-huy="huyn">Create new
                     operation
                 </button>
+                &nbsp
+                <button class="btn btn-success btn-lg" disabled id="total-sum">
+                </button>
+                &nbsp
+                <button class="btn btn-danger btn-lg" disabled id="total-sum-expense">
+                </button>
             </div>
         </div>
     </div>
@@ -189,11 +193,13 @@
                                             <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
                                             <div class="form-outline flex-fill mb-0">
                                                 <input type="number" min="0" oninput="validity.valid||(value='');"
+                                                       style="text-align:center;"
                                                        id="new-operation-amount" class="form-control"/>
                                                 <label class="form-label" for="new-operation-amount">Amount</label>
                                             </div>
                                             <div class="form-outline flex-fill mb-0">
-                                                <input type="text" id="new-operation-comment" class="form-control"/>
+                                                <input type="text" style="text-align:center;" id="new-operation-comment"
+                                                       class="form-control"/>
                                                 <label class="form-label" for="new-operation-comment">Comment</label>
                                             </div>
                                         </div>
@@ -227,24 +233,25 @@
                                     <text id="currentOperationId"></text>
                                 </font></p>
                                 <div class="mx-1 mx-md-4 text-center">
-                                    <input type="radio" class="btn-check" name="options" id="eeee"
-                                           autocomplete="off"
-                                           checked>
                                     <label class="btn btn-secondary" for="input-income-button" id="buttonIncome"
+                                           disabled
                                            style="display: none">Income</label>
                                     <label class="btn btn-secondary" for="input-expense-button" id="buttonExpense"
+                                           disabled
                                            style="display: none">Expense</label><br>
                                     <br>
                                     <form>
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
                                             <div class="form-outline flex-fill mb-0">
-                                                <input type="number" min="0" oninput="validity.valid||(value='');"
-                                                       id="amountOperation" class="form-control"/>
+                                                <input type="text" min="0" style="text-align:center;"
+                                                       oninput="validity.valid||(value='');"
+                                                       id="amountOperation" disabled class="form-control"/>
                                                 <label class="form-label" for="amountOperation">Amount</label>
                                             </div>
-                                            <div class="form-outline flex-fill mb-0">
-                                                <input type="text" id="commentOperation" class="form-control"/>
+                                            <div class="form-outline flex-row mb-0">
+                                                <input type="text" style="text-align:center;" id="commentOperation"
+                                                       disabled class="form-control"/>
                                                 <label class="form-label" for="commentOperation">Comment</label>
                                             </div>
                                         </div>
@@ -253,7 +260,7 @@
                                         <button class="btn btn-primary btn-lg" id="open-operation-back-to-list">Back to
                                             list
                                         </button>&nbsp;
-                                        <button class="btn btn-primary btn-lg" id="open-operation-delete-operation">
+                                        <button class="btn btn-warning btn-lg" id="open-operation-delete-operation">
                                             Delete
                                         </button>
                                     </div>
@@ -267,22 +274,31 @@
     </div>
 </section>
 <script>
+    function hideAllFormsAndViews() {
+        document.getElementById("login-view").style.display = "none";
+        document.getElementById("register-view").style.display = "none";
+        document.getElementById("table-view").style.display = "none";
+        document.getElementById("open-operation-form").style.display = "none";
+        document.getElementById("input-operation-view").style.display = "none";
+    }
 
     function tableGeneration(transaction) {
         let row = `<tr><th scope="row">${transaction.id}</th><td>${transaction.is_income}</td><td>${transaction.amount}</td><td>${transaction.comment}</td><td><button class="btn btn-primary btn-lg operation-open" data-id="${transaction.id}">Open</button></td></tr>`;
         document.getElementById("table-tbody").innerHTML += row;
     }
 
-    /**
-     * @param {Response} response
-     */
-    async function respondCodeLogic(response) {
+    async function showTableAndWithCurrentOperations() {
+        const response = await fetch("/operation", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+
         const result = await response.json();
 
         if (result.success === true) {
-            document.getElementById("login-view").style.display = "none";
-            document.getElementById("register-view").style.display = "none";
-            document.getElementById("input-operation-view").style.display = "none";
+            hideAllFormsAndViews();
             document.getElementById("table-view").style.display = "block";
 
             result.data.forEach((transaction) => {
@@ -290,14 +306,12 @@
             });
 
             // sum of amount rows.
-            let sum = 0;
             let table = document.getElementById("table");
             let sumVal = 0;
             for (let i = 1; i < table.rows.length; i++) {
                 let rowAmount = parseInt(table.rows[i].cells[2].innerHTML);
                 sumVal = sumVal + rowAmount;
             }
-            console.log(sumVal);
 
             //listened for open buttons
             let list = document.getElementsByClassName("operation-open");
@@ -305,14 +319,14 @@
                 item.onclick = operationOpenTargetDatasetId;
             }
 
+        } else {
+            alert(result.message)
         }
     }
 
     function showInputFormOperation() {
 
-        document.getElementById("login-view").style.display = "none";
-        document.getElementById("register-view").style.display = "none";
-        document.getElementById("table-view").style.display = "none";
+        hideAllFormsAndViews();
         document.getElementById("input-operation-view").style.display = "block";
     }
 
@@ -320,17 +334,16 @@
 
     function openOperationBackToList() {
 
-        document.getElementById("login-view").style.display = "none";
-        document.getElementById("register-view").style.display = "none";
-        document.getElementById("input-operation-view").style.display = "none";
-        document.getElementById("open-operation-form").style.display = "none";
+        hideAllFormsAndViews();
         document.getElementById("table-view").style.display = "block";
+
     }
 
     document.getElementById("open-operation-back-to-list").onclick = openOperationBackToList;
 
     function notRegistered() {
 
+        hideAllFormsAndViews();
         document.getElementById("register-view").style.display = "block";
     }
 
@@ -352,44 +365,132 @@
                 body: json,
             });
 
-            await respondCodeLogic(response);
+            const result = await response.json();
+
+            if (result.success === true) {
+                await showTableAndWithCurrentOperations();
+            } else {
+                alert(result.message);
+            }
 
         } catch (error) {
             alert(error);
         }
+
+        async function getTotalSum() {
+            try {
+                const response = await fetch("/totalSum", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: json,
+                });
+
+                const result = await response.json();
+                if (result.success === true) {
+                    document.getElementById("total-sum").innerText = "Total income is " + `${result.data.SUM}`;
+                } else {
+                    alert(result.message);
+                }
+
+                const response2 = await fetch("/totalSumExpense", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: json,
+                });
+
+                const result2 = await response2.json();
+                if (result2.success === true) {
+                    document.getElementById("total-sum-expense").innerText = "Total expenses is " + `${result2.data.TOTALSUMEXPENSE}`;
+                } else {
+                    alert(result2.message);
+                }
+
+            } catch (error) {
+                alert(error);
+            }
+        }
+
+        return getTotalSum();
     }
 
-    async function loginJSON() {
-        let password = document.getElementById("register-password").value;
-        let login = document.getElementById("register-login").value;
+    async function login() {
+        let password = document.getElementById("login-password").value;
+        let login = document.getElementById("login-login").value;
         let myObj = {login: login, password: password};
         let json = JSON.stringify(myObj);
         try {
-            const response = await fetch("/operation", {
+            const response = await fetch("/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: json,
             });
+            console.log(response);
+            const result = await response.json();
+            console.log(result);
+            if (result.success === true) {
+                await showTableAndWithCurrentOperations();
+            } else {
+                alert(result.message);
+            }
 
-            await respondCodeLogic(response);
         } catch (error) {
             alert(error);
         }
+
+        async function getTotalSum() {
+            try {
+                const response = await fetch("/totalSum", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: json,
+                });
+
+                const result = await response.json();
+                if (result.success === true) {
+                    document.getElementById("total-sum").innerText = "Total income is " + `${result.data.SUM}`;
+                } else {
+                    alert(result.message);
+                }
+
+                const response2 = await fetch("/totalSumExpense", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: json,
+                });
+
+                const result2 = await response2.json();
+                if (result2.success === true) {
+                    document.getElementById("total-sum-expense").innerText = "Total expenses is " + `${result2.data.TOTALSUMEXPENSE}`;
+                } else {
+                    alert(result2.message);
+                }
+
+            } catch (error) {
+                alert(error);
+            }
+        }
+
+        return getTotalSum();
+
     }
 
     document.getElementById("register-button").onclick = registerJSON;
-    document.getElementById("login-button").onclick = loginJSON;
+    document.getElementById("login-button").onclick = login;
 
     async function operationOpenTargetDatasetId(target) {
         let targetIdNumber = target.target.dataset.id;
 
-        document.getElementById("login-view").style.display = "none";
-        document.getElementById("register-view").style.display = "none";
-        document.getElementById("table-view").style.display = "none";
-        document.getElementById("input-operation-view").style.display = "none";
-        //  document.getElementById("open-operation-form").style.removeProperty('display');
+        hideAllFormsAndViews();
         document.getElementById("open-operation-form").style.display = "block";
 
         let targetNumber = JSON.stringify(targetIdNumber);
@@ -432,8 +533,7 @@
         } catch (error) {
             alert(error);
         }
-        document.getElementById("table-view").style.display = "none";
-        document.getElementById("open-operation-form").style.display = "none";
+        hideAllFormsAndViews();
         document.getElementById("table-view").style.display = "block";
 
     }
@@ -450,12 +550,9 @@
             } else {
                 return 0;
             }
-
         }
 
         let is_income = isIncomeTrue();
-        console.log('is_income', is_income);
-
         let newOperationData = {amount: amount, comment: comment, is_income: is_income};
         let json = JSON.stringify(newOperationData);
         try {
@@ -467,14 +564,53 @@
                 body: json,
             });
 
-            await respondCodeLogic(response);
+            await showTableAndWithCurrentOperations(response);
         } catch (error) {
             alert(error);
         }
+
+        async function getTotalSum() {
+            try {
+                const response = await fetch("/totalSum", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: json,
+                });
+
+                const result = await response.json();
+                if (result.success === true) {
+                    document.getElementById("total-sum").innerText = "Total income is " + `${result.data.SUM}`;
+                } else {
+                    alert(result.message);
+                }
+
+                const response2 = await fetch("/totalSumExpense", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: json,
+                });
+
+                const result2 = await response2.json();
+                if (result2.success === true) {
+                    document.getElementById("total-sum-expense").innerText = "Total expenses is " + `${result2.data.TOTALSUMEXPENSE}`;
+                } else {
+                    alert(result2.message);
+                }
+
+            } catch (error) {
+                alert(error);
+            }
+        }
+
+        return getTotalSum();
+
     }
 
     document.getElementById("new-operation-button").onclick = createNewOperation;
-
 
 </script>
 </body>
