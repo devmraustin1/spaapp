@@ -87,12 +87,12 @@ class Db
 
     public function getTotalIncome()
     {
-        return $this->pdo->query("SELECT SUM(AMOUNT) AS SUM FROM operations WHERE is_income = 1;")->fetch(PDO::FETCH_ASSOC);
+        return $this->pdo->query("SELECT SUM(AMOUNT) AS TOTAL_SUM_INCOME FROM operations WHERE is_income = 1;")->fetch(PDO::FETCH_ASSOC);
     }
 
     public function getTotalExpenses()
     {
-        return $this->pdo->query("SELECT SUM(AMOUNT) AS TOTALSUMEXPENSE FROM operations WHERE is_income = 0;")->fetch(PDO::FETCH_ASSOC);
+        return $this->pdo->query("SELECT SUM(AMOUNT) AS TOTAL_SUM_EXPENSE FROM operations WHERE is_income = 0;")->fetch(PDO::FETCH_ASSOC);
     }
 }
 
