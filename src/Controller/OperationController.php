@@ -20,7 +20,7 @@ readonly class OperationController
     public function getLastTenTransactions(): never
     {
         $lastTenTransactions = $this->db->getLastTenTransactions();
-        echo new SuccessJsonResponse("Registered", $lastTenTransactions);
+        echo new SuccessJsonResponse("Got last 10 operations", $lastTenTransactions);
 
         exit();
     }

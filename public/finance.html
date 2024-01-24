@@ -282,7 +282,7 @@
         document.getElementById("input-operation-view").style.display = "none";
     }
 
-    function tableGeneration(transaction) {
+    function insertRowIntoTable(transaction) {
         let row = `<tr><th scope="row">${transaction.id}</th><td>${transaction.is_income}</td><td>${transaction.amount}</td><td>${transaction.comment}</td><td><button class="btn btn-primary btn-lg operation-open" data-id="${transaction.id}">Open</button></td></tr>`;
         document.getElementById("table-tbody").innerHTML += row;
     }
@@ -300,18 +300,11 @@
         if (result.success === true) {
             hideAllFormsAndViews();
             document.getElementById("table-view").style.display = "block";
+            document.getElementById("table-tbody").innerHTML = '';
 
             result.data.forEach((transaction) => {
-                tableGeneration(transaction)
+                insertRowIntoTable(transaction)
             });
-
-            // sum of amount rows.
-            let table = document.getElementById("table");
-            let sumVal = 0;
-            for (let i = 1; i < table.rows.length; i++) {
-                let rowAmount = parseInt(table.rows[i].cells[2].innerHTML);
-                sumVal = sumVal + rowAmount;
-            }
 
             //listened for open buttons
             let list = document.getElementsByClassName("operation-open");
@@ -533,6 +526,8 @@
         } catch (error) {
             alert(error);
         }
+
+        await showTableAndWithCurrentOperations();
         hideAllFormsAndViews();
         document.getElementById("table-view").style.display = "block";
 
@@ -607,7 +602,6 @@
         }
 
         return getTotalSum();
-
     }
 
     document.getElementById("new-operation-button").onclick = createNewOperation;
