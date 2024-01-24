@@ -167,6 +167,12 @@
                 &nbsp
                 <button class="btn btn-danger btn-lg" disabled id="total-sum-expense">
                 </button>
+                &nbsp
+                <button class="btn btn-info btn-lg" disabled id="total-income">
+                </button>
+                &nbsp
+                <button class="btn btn-info btn-lg" disabled id="total-expenses">
+                </button>
             </div>
         </div>
     </div>
@@ -306,6 +312,23 @@
                 insertRowIntoTable(transaction)
             });
 
+            let totalIncome = 0;
+            let totalExpenses = 0;
+
+            result.data.forEach((transaction) => {
+                console.log(transaction);
+                if (transaction.is_income === 1) {
+                    totalIncome = totalIncome + transaction.amount;
+                } else if (transaction.is_income === 0) {
+                    totalExpenses = totalExpenses + transaction.amount;
+                }
+            });
+
+            document.getElementById("total-sum").innerText = "Sum of the last 10 income trans  " + `${totalIncome}`;
+            document.getElementById("total-sum-expense").innerText = "Sum of the last 10 expenses trans  " + `${totalExpenses}`;
+            //document.getElementById("total-balance").innerText = "Total balance  " + `${totalBalance}`;
+
+
             //listened for open buttons
             let list = document.getElementsByClassName("operation-open");
             for (let item of list) {
@@ -315,6 +338,44 @@
         } else {
             alert(result.message)
         }
+
+        async function getTotalSum() {
+            try {
+                const response3 = await fetch("/totalSum", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                });
+
+                const result3 = await response3.json();
+                if (result3.success === true) {
+                    document.getElementById("total-income").innerText = "Ttl income " + `${result3.data.SUM}`;
+                } else {
+                    alert(result3.message);
+                }
+
+                const response2 = await fetch("/totalSumExpense", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                });
+
+                const result2 = await response2.json();
+                if (result2.success === true) {
+                    document.getElementById("total-expenses").innerText = "Ttl expenses " + `${result2.data.TOTALSUMEXPENSE}`;
+                } else {
+                    alert(result2.message);
+                }
+
+            } catch (error) {
+                alert(error);
+            }
+        }
+
+        await getTotalSum();
+
     }
 
     function showInputFormOperation() {
@@ -369,45 +430,6 @@
         } catch (error) {
             alert(error);
         }
-
-        async function getTotalSum() {
-            try {
-                const response = await fetch("/totalSum", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: json,
-                });
-
-                const result = await response.json();
-                if (result.success === true) {
-                    document.getElementById("total-sum").innerText = "Total income is " + `${result.data.SUM}`;
-                } else {
-                    alert(result.message);
-                }
-
-                const response2 = await fetch("/totalSumExpense", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: json,
-                });
-
-                const result2 = await response2.json();
-                if (result2.success === true) {
-                    document.getElementById("total-sum-expense").innerText = "Total expenses is " + `${result2.data.TOTALSUMEXPENSE}`;
-                } else {
-                    alert(result2.message);
-                }
-
-            } catch (error) {
-                alert(error);
-            }
-        }
-
-        return getTotalSum();
     }
 
     async function login() {
@@ -435,46 +457,6 @@
         } catch (error) {
             alert(error);
         }
-
-        async function getTotalSum() {
-            try {
-                const response = await fetch("/totalSum", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: json,
-                });
-
-                const result = await response.json();
-                if (result.success === true) {
-                    document.getElementById("total-sum").innerText = "Total income is " + `${result.data.SUM}`;
-                } else {
-                    alert(result.message);
-                }
-
-                const response2 = await fetch("/totalSumExpense", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: json,
-                });
-
-                const result2 = await response2.json();
-                if (result2.success === true) {
-                    document.getElementById("total-sum-expense").innerText = "Total expenses is " + `${result2.data.TOTALSUMEXPENSE}`;
-                } else {
-                    alert(result2.message);
-                }
-
-            } catch (error) {
-                alert(error);
-            }
-        }
-
-        return getTotalSum();
-
     }
 
     document.getElementById("register-button").onclick = registerJSON;
@@ -563,45 +545,6 @@
         } catch (error) {
             alert(error);
         }
-
-        async function getTotalSum() {
-            try {
-                const response = await fetch("/totalSum", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: json,
-                });
-
-                const result = await response.json();
-                if (result.success === true) {
-                    document.getElementById("total-sum").innerText = "Total income is " + `${result.data.SUM}`;
-                } else {
-                    alert(result.message);
-                }
-
-                const response2 = await fetch("/totalSumExpense", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: json,
-                });
-
-                const result2 = await response2.json();
-                if (result2.success === true) {
-                    document.getElementById("total-sum-expense").innerText = "Total expenses is " + `${result2.data.TOTALSUMEXPENSE}`;
-                } else {
-                    alert(result2.message);
-                }
-
-            } catch (error) {
-                alert(error);
-            }
-        }
-
-        return getTotalSum();
     }
 
     document.getElementById("new-operation-button").onclick = createNewOperation;
