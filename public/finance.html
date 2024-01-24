@@ -99,7 +99,8 @@
             </div>
         </div>
     </div>
-    <!--LOGIN-VIEW-END-->
+    <!--LOGIN-
+    VIEW-END-->
     <div class="container h-100" style="display: none" id="operation-view">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-lg-12 col-xl-11">
@@ -161,7 +162,7 @@
                 <button class="btn btn-primary btn-lg" id="create-operation-button" data-huy="huyn">Create new
                     operation
                 </button>
-                &nbsp
+                &nbsp&nbsp&nbsp&nbsp<br>
                 <button class="btn btn-success btn-lg" disabled id="total-sum">
                 </button>
                 &nbsp
@@ -171,7 +172,7 @@
                 <button class="btn btn-info btn-lg" disabled id="total-income">
                 </button>
                 &nbsp
-                <button class="btn btn-info btn-lg" disabled id="total-expenses">
+                <button type="button" class="btn btn-primary btn-lg btn-block" disabled id="total-expenses">
                 </button>
             </div>
         </div>
@@ -350,7 +351,7 @@
 
                 const result3 = await response3.json();
                 if (result3.success === true) {
-                    document.getElementById("total-income").innerText = "Ttl income " + `${result3.data.SUM}`;
+                    document.getElementById("total-income").innerText = "Ttl income " + `${result3.data.TOTAL_SUM_INCOME}`;
                 } else {
                     alert(result3.message);
                 }
@@ -364,7 +365,7 @@
 
                 const result2 = await response2.json();
                 if (result2.success === true) {
-                    document.getElementById("total-expenses").innerText = "Ttl expenses " + `${result2.data.TOTALSUMEXPENSE}`;
+                    document.getElementById("total-expenses").innerText = "Ttl expenses " + `${result2.data.TOTAL_SUM_EXPENSE}`;
                 } else {
                     alert(result2.message);
                 }
