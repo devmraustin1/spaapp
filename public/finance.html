@@ -13,7 +13,7 @@
 </head>
 <body>
 
-<section class="vh-100" style="background-color: #eee;">
+<section class="vh-100">
     <!--REGISTER-VIEW-->
     <div class="container h-100" style="display: none" id="register-view">
         <div class="row d-flex justify-content-center align-items-center h-100">
@@ -158,6 +158,13 @@
                 <tbody id="table-tbody">
                 </tbody>
             </table>
+            <!--SEARCH BOX-->
+            <div class="mw-50 " style="width: 400px;">
+                <form class="input-group" action="/" method="GET">
+                    <input type="text" id="searchByComment" name="search" class="form-control rounded"
+                           placeholder="Search by comment" aria-label="Search"/>
+                </form>
+            </div>
             <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                 <button class="btn btn-primary btn-lg" id="create-operation-button" data-huy="huyn">Create new
                     operation
@@ -294,7 +301,7 @@
         document.getElementById("table-tbody").innerHTML += row;
     }
 
-    async function showTableAndWithCurrentOperations() {
+    async function showTableAndWithLastOperations() {
         const response = await fetch("/operation", {
             method: "POST",
             headers: {
@@ -302,6 +309,13 @@
             }
         });
 
+        await showTableAndWithProvidedOperationsFromResponse(response);
+    }
+
+    /**
+     * @param {Response} response
+     */
+    async function showTableAndWithProvidedOperationsFromResponse(response) {
         const result = await response.json();
 
         if (result.success === true) {
@@ -370,20 +384,6 @@
                     alert(result2.message);
                 }
 
-                const responseSearch = await fetch("/search", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    }
-                });
-
-                const resultSearch = await responseSearch.json();
-                if (resultSearch.success === true)
-                {
-                    //TODO
-                } else {
-                    alert(resultSearch.message);
-                }
 
             } catch (error) {
                 alert(error);
@@ -391,7 +391,29 @@
         }
 
         await getTotalSum();
+        //searchByComment
+        document.getElementById("searchByComment").onkeydown = searchKeyDown;
 
+        async function searchKeyDown() {
+            setTimeout( // без задержки значение из поле получали старое
+                async function () {
+                    try {
+                        let search = document.getElementById("searchByComment").value;
+                        console.log(search);
+                        const response = await fetch(`/search/?query=${search}`, {
+                            method: "GET",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                        });
+                        await showTableAndWithProvidedOperationsFromResponse(response);
+                    } catch (error) {
+                        alert(error);
+                    }
+                },
+                100
+            )
+        }
     }
 
     function showInputFormOperation() {
@@ -438,7 +460,7 @@
             const result = await response.json();
 
             if (result.success === true) {
-                await showTableAndWithCurrentOperations();
+                await showTableAndWithLastOperations();
             } else {
                 alert(result.message);
             }
@@ -465,7 +487,7 @@
             const result = await response.json();
             console.log(result);
             if (result.success === true) {
-                await showTableAndWithCurrentOperations();
+                await showTableAndWithLastOperations();
             } else {
                 alert(result.message);
             }
@@ -525,7 +547,7 @@
             alert(error);
         }
 
-        await showTableAndWithCurrentOperations();
+        await showTableAndWithLastOperations();
         hideAllFormsAndViews();
         document.getElementById("table-view").style.display = "block";
 
@@ -557,14 +579,13 @@
                 body: json,
             });
 
-            await showTableAndWithCurrentOperations(response);
+            await showTableAndWithLastOperations(response);
         } catch (error) {
             alert(error);
         }
     }
 
     document.getElementById("new-operation-button").onclick = createNewOperation;
-
 
 
 </script>
