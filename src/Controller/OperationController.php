@@ -48,11 +48,11 @@ readonly class OperationController
     public function createNewOperation(): never
     {
         $operationForm = OperationForm::createNewOperation();
+
         if ($this->db->createNewOperation($operationForm->amount, $operationForm->comment, $operationForm->isIncome)) {
             echo new SuccessJsonResponse("Created operation", []);
         } else {
             echo new ErrorJsonResponse("Error creating operation");
-
         }
         exit ();
     }
@@ -73,11 +73,12 @@ readonly class OperationController
 
     public function searchByComment(): never
     {
+        $operations = $this->db->getTransactionListByComment($_GET['query']);
 
-        if ($this->db->getTransactionListByComment($_GET['search'])) {
-            echo new SuccessJsonResponse("Search by `{$_GET['search']}` completed", []);
+        if (!empty($operations)) {
+            echo new SuccessJsonResponse("Search by `{$_GET['query']}` completed", $operations);
         } else {
-            echo new ErrorJsonResponse("Error creating operation");
+            echo new ErrorJsonResponse("Search by `{$_GET['query']}` not found");
         }
         exit();
     }

@@ -52,7 +52,7 @@ try {
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        if (!empty($_GET['search'])) {
+        if ($firstElement =='search' && isset($_SESSION['user_id'])) {
             (new OperationController($logger, $db))->searchByComment();
         }
     }
