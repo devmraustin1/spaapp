@@ -43,8 +43,9 @@ docker compose run php-fpm bash -c 'composer install'
 
 When you end - don't forget to stop Docker containers with command:
 
-`docker compose stop`
-
+```bash
+docker compose stop
+```
 ## Appearance
 
 ![login](docs/login.png)
