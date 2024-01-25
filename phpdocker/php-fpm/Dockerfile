@@ -10,3 +10,5 @@ RUN apt-get update \
         php8.3-xdebug \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
+
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
