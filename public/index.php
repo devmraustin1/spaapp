@@ -51,6 +51,12 @@ try {
         }
     }
 
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        if (!empty($_GET['search'])) {
+            (new OperationController($logger, $db))->searchByComment();
+        }
+    }
+
 } catch (Throwable $e) {
     echo new ErrorJsonResponse($e->getMessage());
     exit();

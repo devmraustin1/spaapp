@@ -370,6 +370,21 @@
                     alert(result2.message);
                 }
 
+                const responseSearch = await fetch("/search", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                });
+
+                const resultSearch = await responseSearch.json();
+                if (resultSearch.success === true)
+                {
+                    //TODO
+                } else {
+                    alert(resultSearch.message);
+                }
+
             } catch (error) {
                 alert(error);
             }
@@ -549,6 +564,8 @@
     }
 
     document.getElementById("new-operation-button").onclick = createNewOperation;
+
+
 
 </script>
 </body>

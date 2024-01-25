@@ -71,5 +71,15 @@ readonly class OperationController
         exit();
     }
 
+    public function searchByComment(): never
+    {
+
+        if ($this->db->getTransactionListByComment($_GET['search'])) {
+            echo new SuccessJsonResponse("Search by `{$_GET['search']}` completed", []);
+        } else {
+            echo new ErrorJsonResponse("Error creating operation");
+        }
+        exit();
+    }
 }
 

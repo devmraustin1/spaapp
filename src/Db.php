@@ -94,5 +94,14 @@ class Db
     {
         return $this->pdo->query("SELECT SUM(AMOUNT) AS TOTAL_SUM_EXPENSE FROM operations WHERE is_income = 0;")->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function getTransactionListByComment(string $search): array
+    {
+        $sql = "SELECT * FROM operations WHERE comment LIKE :search";
+        $sth = $this->pdo->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+        $sth->execute(['search' => "%$search%"]);
+        return $sth->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
+
 
