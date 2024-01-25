@@ -26,13 +26,20 @@ Front-end:
 1. Create a folder we want to use for this project
 2. Enter inside created folder using terminal
 3. Clone the project into the folder with:
-
-    `git clone git@github.com:AREZA13/spa-php-mysql.git .`
-4. `chmod 777 logs/`
-5. `docker compose up -d`
-6. `docker exec -it spa-php-mysql-php-fpm-1 bash -c 'composer install'`
-7. Visit http://localhost:37000/finance.html
-8. Register a new user
+```bash
+git clone git@github.com:AREZA13/spa-php-mysql.git .
+```
+```bash
+chmod 777 logs/
+```
+```bash
+docker compose up -d
+```
+```bash
+docker compose run php-fpm bash -c 'composer install'
+```
+4. Visit http://localhost:37000/finance.html
+5. Register a new user
 
 When you end - don't forget to stop Docker containers with command:
 
