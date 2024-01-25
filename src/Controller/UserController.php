@@ -10,11 +10,11 @@ use App\SuccessJsonResponse;
 use Exception;
 use Monolog\Logger;
 
-class UserController
+readonly class UserController
 {
     public function __construct(
-        private readonly Logger $logger,
-        private readonly Db     $db
+        private Logger $logger,
+        private Db     $db
     )
     {
     }
@@ -28,6 +28,7 @@ class UserController
             $registerFrom = RegisterForm::fromUserRequest();
         } catch (Exception $ex) {
             echo new ErrorJsonResponse($ex->getMessage());
+            $this->logger->debug('FromRegisterUserController', ['ex' => $ex->getMessage()]);
             exit ();
         }
 
@@ -44,6 +45,7 @@ class UserController
             $loginForm = LoginForm::fromUserRequest();
         } catch (Exception $ex) {
             echo new ErrorJsonResponse($ex->getMessage());
+            $this->logger->debug('FromLoginUserController', ['ex' => $ex->getMessage()]);
             exit ();
         }
 
@@ -52,6 +54,7 @@ class UserController
             $_SESSION['user_id'] = $userArray['id'];
         } catch (Exception $ex) {
             echo new ErrorJsonResponse($ex->getMessage());
+            $this->logger->debug('FromLoginUserController', ['ex'=> $ex->getMessage()]);
             exit();
         }
         echo new SuccessJsonResponse("Login OK", []);

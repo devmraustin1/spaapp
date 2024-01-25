@@ -59,6 +59,7 @@ try {
 
 } catch (Throwable $e) {
     echo new ErrorJsonResponse($e->getMessage());
+    $logger->debug('FromIndex', ['ex' => $e->getMessage()]);
     exit();
 }
 

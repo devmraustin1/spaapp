@@ -38,6 +38,7 @@ readonly class OperationController
             echo new SuccessJsonResponse("Deleted operation by ID $id", []);
         } else {
             echo new ErrorJsonResponse("Error deleting $id");
+            $this->logger->warning('FromDeleteCurrentOperationOperationController', ['ex'=> "Error deleting $id"]);
         }
         exit();
     }
@@ -53,6 +54,7 @@ readonly class OperationController
             echo new SuccessJsonResponse("Created operation", []);
         } else {
             echo new ErrorJsonResponse("Error creating operation");
+            $this->logger->warning('FromCreateNewOperation', ['ex' => "Error creating operation"]);
         }
         exit ();
     }
@@ -79,6 +81,7 @@ readonly class OperationController
             echo new SuccessJsonResponse("Search by `{$_GET['query']}` completed", $operations);
         } else {
             echo new ErrorJsonResponse("Search by `{$_GET['query']}` not found");
+            $this->logger->warning('FromSearchByCommentOperationController', ['ex' => "Search by `{$_GET['query']}` not found"]);
         }
         exit();
     }

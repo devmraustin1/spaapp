@@ -3,17 +3,15 @@ declare(strict_types=1);
 
 namespace App;
 
-use App\Dto\OperationForm;
 use Exception;
 use Monolog\Logger;
 use PDO;
-use PDOException;
 
-class Db
+readonly class Db
 {
     public function __construct(
-        private readonly PDO    $pdo,
-        private readonly Logger $logger
+        private PDO    $pdo,
+        private Logger $logger
     )
     {
     }
@@ -35,7 +33,6 @@ class Db
         if (password_verify($password, $userArray['password_hashed'])) {
             return $userArray;
         }
-
         throw new Exception("user password and stored hash not equal");
     }
 
@@ -55,6 +52,7 @@ class Db
     {
         if ($this->getUserIdByLogin($login)) {
             throw new Exception("User already exists");
+
         }
 
         $sql = "INSERT INTO users (login, password_hashed) VALUES (?, ?)";

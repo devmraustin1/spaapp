@@ -2,7 +2,6 @@
 
 namespace App\Dto;
 
-
 use Exception;
 
 readonly class  LoginForm
